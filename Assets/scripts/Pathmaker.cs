@@ -19,8 +19,13 @@ public class Pathmaker : MonoBehaviour {
 //	Declare a public Transform called floorPrefab, assign the prefab in inspector;
 //	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
 
+	private int counter = 0;
+	public Transform floorPrefab;
+	public Transform pathmakerSpherePrefab;
 
-	void Update () {
+
+	void Update () 
+	{
 //		If counter is less than 50, then:
 //			Generate a random number from 0.0f to 1.0f;
 //			If random number is less than 0.25f, then rotate myself 90 degrees;
@@ -33,6 +38,33 @@ public class Pathmaker : MonoBehaviour {
 //			Increment counter;
 //		Else:
 //			Destroy my game object; 		// self destruct if I've made enough tiles already
+
+		if (counter < 100)
+		{
+			float randomNumber = Random.Range(0.0f, 1.0f);
+
+			if (randomNumber <= 0.25f)
+			{
+				this.transform.Rotate(0, 90f, 0);
+			} else if (randomNumber > 0.25f || randomNumber <= 0.5f)
+			{
+				this.transform.Rotate(0, -90f, 0);
+			} else if (randomNumber >= 0.99f)
+			{
+				/*Transform newSphere = (Transform)*/Instantiate(pathmakerSpherePrefab, this.transform.position, this.transform.rotation);
+			}
+
+			/*Transform newfloor = (Transform)*/Instantiate(floorPrefab, this.transform.position, this.transform.rotation);
+			
+			transform.Translate(Vector3.forward * 5);
+			counter++;
+
+		}
+		else
+		{
+			Destroy(this.gameObject);
+		}
+		
 	}
 
 } // end of class scope
