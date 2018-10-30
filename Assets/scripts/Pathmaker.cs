@@ -20,10 +20,23 @@ public class Pathmaker : MonoBehaviour {
 //	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
 
 	private int counter = 0;
-	public Transform floorPrefab;
+	public Transform [] floorPrefab;
 	public Transform pathmakerSpherePrefab;
 
+	public int globalTileLimit = 0;
+	
+	//random variables
+	private int counterLimit;
+	private float firstTurn;
 
+
+	void Start()
+	{
+		counterLimit = Random.Range(150, 250);
+		firstTurn = Random.Range(0.1f, 0.39f);
+
+	}
+	
 	void Update () 
 	{
 //		If counter is less than 50, then:
@@ -39,32 +52,42 @@ public class Pathmaker : MonoBehaviour {
 //		Else:
 //			Destroy my game object; 		// self destruct if I've made enough tiles already
 
-		if (counter < 100)
+		if (counter < counterLimit && globalTileLimit < 1000)
 		{
 			float randomNumber = Random.Range(0.0f, 1.0f);
 
-			if (randomNumber <= 0.25f)
+			if (randomNumber <= firstTurn)
 			{
 				this.transform.Rotate(0, 90f, 0);
-			} else if (randomNumber > 0.25f || randomNumber <= 0.5f)
+				
+			} else if (randomNumber > 0.4f || randomNumber <= 0.8f)
 			{
 				this.transform.Rotate(0, -90f, 0);
-			} else if (randomNumber >= 0.99f)
+				
+			} else if (randomNumber >= 0.95f)
 			{
-				/*Transform newSphere = (Transform)*/Instantiate(pathmakerSpherePrefab, this.transform.position, this.transform.rotation);
+				Instantiate(pathmakerSpherePrefab, this.transform.position, this.transform.rotation);
 			}
 
-			/*Transform newfloor = (Transform)*/Instantiate(floorPrefab, this.transform.position, this.transform.rotation);
+			int RandomPicker = Random.Range(0, floorPrefab.Length);
+			
+			Instantiate(floorPrefab[RandomPicker], this.transform.position, this.transform.rotation);
 			
 			transform.Translate(Vector3.forward * 5);
 			counter++;
+			globalTileLimit++;
 
 		}
 		else
 		{
 			Destroy(this.gameObject);
 		}
-		
+
+		if (globalTileLimit == 1000)
+		{
+			Destroy(this.gameObject);
+		}
+
 	}
 
 } // end of class scope
